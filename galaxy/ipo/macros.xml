@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<macros>
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="3.1.2">R</requirement>
+	    <requirement type="package" version="1.7.5">r-ipo</requirement>
+	    <requirement type="package" version="1.1_4">r-batch</requirement>
+        </requirements>
+    </xml>
+    <xml name="stdio">
+        <stdio>
+            <exit_code range="1" level="fatal" />
+        </stdio>
+    </xml>
+
+    <token name="@COMMAND_INTERPRETER@">
+        LANG=C Rscript $__tool_directory__/
+    </token>
+
+    <token name="@COMMAND_LOG_EXIT@">
+        ;
+        return=\$?;
+        mv log.txt $log;
+        cat $log;
+        sh -c "exit \$return"
+    </token>
+
+    <token name="@HELP_AUTHORS@">
+.. class:: infomark
+
+**Authors**  Gunnar Libiseller, Michaela Dvorzak, Ulrike Kleb, Edgar Gander, Tobias Eisenberg, Frank Madeo, Steffen Neumann, Gert Trausinger, Frank Sinner, Thomas Pieber and Christoph Magnes 
+
+.. class:: infomark
+
+**Galaxy integration** ABiMS TEAM - UPMC/CNRS - Station biologique de Roscoff and Yann Guitton yann.guitton@oniris-nantes.fr - part of Workflow4Metabolomics.org [W4M]
+
+ | Contact support@workflow4metabolomics.org for any questions or concerns about the Galaxy implementation of this tool.
+
+---------------------------------------------------
+
+    </token>
+
+
+    <xml name="citation">
+        <citations>
+            <citation type="doi">10.1186/s12859-015-0562-8</citation>
+            <citation type="doi">10.1093/bioinformatics/btu813</citation>
+        </citations>
+    </xml>
+</macros>
