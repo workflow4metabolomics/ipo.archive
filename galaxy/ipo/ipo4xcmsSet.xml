@@ -10,7 +10,7 @@
     <expand macro="stdio"/>
     
     <command><![CDATA[
-        @COMMAND_INTERPRETER@/ipo4xcmsSet.r
+        @COMMAND_SCRIPT@
 
         #if $inputs.input == "lib":
             library $__app__.config.user_library_import_dir/$__user_email__/$inputs.library
@@ -19,6 +19,8 @@
         #end if
 
         parametersOutput $parametersOutput
+
+        samplebyclass $samplebyclass
 
         ## profmethod $profmethod 
         nSlaves \${GALAXY_SLOTS:-1} method $methods.method 
@@ -50,6 +52,8 @@
                 </param>
             </when>
         </conditional>
+        
+        <param name="samplebyclass" type="integer" value="2" label="Number of samples used per class to estimate the best parameters" help="Set to 0 to use the whole dataset. To save time, reduce this number" />
 
         <conditional name="methods">
             <param name="method" type="select" label="Extraction method for peaks detection" help="[method] See the help section below">
@@ -68,7 +72,6 @@
             <when value="matchedFilter">
                 <param name="step" type="float" value="0.01" label="Step size to use for profile generation" help="[step] The peak detection algorithm creates extracted ion base peak chromatograms (EIBPC) on a fixed step size" optional="true" />
                 <param name="fwhm" type="integer" value="30" label="Full width at half maximum of matched filtration gaussian model peak" help="[fwhm] Only used to calculate the actual sigma" optional="true" />
-                </conditional>
             </when>
         </conditional>       
 
@@ -88,7 +91,7 @@
             <param name="methods|ppm" value="25" />
             <param name="methods|min_peakwidth" value="15,25" />
             <param name="methods|max_peakwidth" value="45,55" />
-            <output name="parametersOutput" />
+            <output name="parametersOutput" file="IPO_parameters4xcmsSet.tsv" />
         </test>
     </tests>
     

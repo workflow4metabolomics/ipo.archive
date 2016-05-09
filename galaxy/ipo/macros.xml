@@ -13,8 +13,8 @@
         </stdio>
     </xml>
 
-    <token name="@COMMAND_INTERPRETER@">
-        LANG=C Rscript $__tool_directory__/
+    <token name="@COMMAND_SCRIPT@">
+        LANG=C Rscript $__tool_directory__/ipo.r
     </token>
 
     <token name="@COMMAND_LOG_EXIT@">

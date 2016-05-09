@@ -11,7 +11,7 @@ sink(log_file, type = "output")
 # ----- PACKAGE -----
 cat("\tPACKAGE INFO\n")
 #pkgs=c("xcms","batch")
-pkgs=c("parallel","BiocGenerics", "Biobase", "Rcpp", "mzR", "xcms","r-rsm","igraph","CAMERA","IPO","batch")
+pkgs=c("parallel","BiocGenerics", "Biobase", "Rcpp", "mzR", "xcms","rsm","igraph","CAMERA","IPO","batch")
 for(pkg in pkgs) {
   suppressPackageStartupMessages( stopifnot( library(pkg, quietly=TRUE, logical.return=TRUE, character.only=TRUE)))
   cat(pkg,"\t",as.character(packageVersion(pkg)),"\n",sep="")
@@ -51,6 +51,10 @@ if (!is.null(listArguments[["parametersOutput"]])){
   parametersOutput = listArguments[["parametersOutput"]]; listArguments[["parametersOutput"]]=NULL
 }
 
+samplebyclass = 2
+if (!is.null(listArguments[["samplebyclass"]])){
+  samplebyclass = listArguments[["samplebyclass"]]; listArguments[["samplebyclass"]]=NULL
+}
 
 #necessary to unzip .zip file uploaded to Galaxy
 #thanks to .zip file it's possible to upload many file as the same time conserving the tree hierarchy of directories
@@ -111,7 +115,7 @@ cat("\n\n")
 cat("\tMAIN PROCESSING INFO\n")
 
 
-ipo4xcmsSet(directory, parametersOutput, listArguments)
+ipo4xcmsSet(directory, parametersOutput, listArguments, samplebyclass)
 
 
 
