@@ -12,9 +12,7 @@
     <command><![CDATA[
         @COMMAND_SCRIPT@
 
-        #if $inputs.input == "lib":
-            library $__app__.config.user_library_import_dir/$__user_email__/$inputs.library
-        #elif $inputs.input == "zip_file":
+        #if $inputs.input == "zip_file":
             zipfile $inputs.zip_file
         #end if
 
@@ -33,7 +31,7 @@
             fwhm $methods.fwhm
         #end if
 
-        @COMMAND_LOG_EXIT@
+        @COMMAND_LOG_EXIT@ 2> /tmp/log.err
     ]]></command>
     
     <inputs>
@@ -41,16 +39,10 @@
         <conditional name="inputs">
             <param name="input" type="select" label="Choose your inputs method" >
                 <option value="zip_file" selected="true">Zip file from your history containing your chromatograms</option>
-                <option value="lib" >Library directory name</option>
             </param>
             <when value="zip_file">
                 <param name="zip_file" type="data" format="no_unzip.zip,zip" label="Zip file" />
              </when>
-            <when value="lib">
-                <param name="library" type="text" size="40" label="Library directory name" help="The name of your directory containing all your data" >
-                    <validator type="empty_field"/> 
-                </param>
-            </when>
         </conditional>
         
         <param name="samplebyclass" type="integer" value="2" label="Number of samples used per class to estimate the best parameters" help="Set to 0 to use the whole dataset. To save time, reduce this number" />
@@ -89,9 +81,18 @@
             <param name="inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
             <param name="methods|method" value="centWave" />
             <param name="methods|ppm" value="25" />
-            <param name="methods|min_peakwidth" value="15,25" />
+            <param name="methods|min_peakwidth" value="20,30" />
             <param name="methods|max_peakwidth" value="45,55" />
-            <output name="parametersOutput" file="IPO_parameters4xcmsSet.tsv" />
+            <output name="parametersOutput" file="faahKO_IPO_parameters4xcmsSet.tsv" />
+        </test>
+        <test>
+            <param name="inputs|input" value="zip_file" />
+            <param name="inputs|zip_file" value="sacuri_2files.zip"  ftype="zip" />
+            <param name="methods|method" value="centWave" />
+            <param name="methods|ppm" value="25" />
+            <param name="methods|min_peakwidth" value="20,30" />
+            <param name="methods|max_peakwidth" value="45,55" />
+            <output name="parametersOutput" file="sacuri_2files_IPO_parameters4xcmsSet.tsv" />
         </test>
     </tests>
     

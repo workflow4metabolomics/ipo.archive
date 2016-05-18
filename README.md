@@ -1,7 +1,7 @@
 IPO for Galaxy
 ===============
 
-[![bioconda-badge](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/r-ipo/README.html) [![Build Status](https://travis-ci.org/workflow4metabolomics/ipo.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/ipo)
 
 Our project
 -----------
@@ -29,11 +29,10 @@ Homepage: [https://galaxyproject.org/](https://galaxyproject.org/)
 
 Dependencies using Conda
 ------------------------
-[![bioconda-badge](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/r-ipo/README.html)
 
 [Conda](http://conda.pydata.org/) is package manager that among many other things can be used to manage Python packages.
 
-The main recipe: [https://github.com/bioconda/bioconda-recipes/tree/master/recipes/r-ipo](https://github.com/bioconda/bioconda-recipes/tree/master/recipes/r-ipo)
 
 ```
 #To install miniconda2
@@ -45,6 +44,12 @@ conda create -n r-ipo r-ipo r-batch`
 #To activate the environment:
 . activate r-ipo
 ```
+
+Travis
+------
+[![Build Status](https://travis-ci.org/workflow4metabolomics/xcms.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/xcms)
+
+Test and Deploy with Confidence. Easily sync your GitHub projects with Travis CI and you'll be testing your code in minutes!
 
 Historic contributors
 ---------------------

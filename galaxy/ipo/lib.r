@@ -25,9 +25,6 @@ ipo4xcmsSet = function(directory, parametersOutput, listArguments, samplebyclass
     #TODO: else, must we keep the RData to been use directly by group?
 
     cat("\t\tSamples used:\n")
-
-    print(mzmlfile)
-    print(dir())
     print(mzmlfile)
 
     paramsPP <- getDefaultXcmsSetStartingParams(listArguments[["method"]]) #load default parameters of IPO

@@ -9,8 +9,6 @@ Changelog/News
 Test Status
 -----------
 
-Planemo test using conda: unbuild
-
-Planemo test using source env.sh: unbuild
+Planemo test using conda: failed on the faahKO_reduce.zip
 
 Planemo shed_test : unbuild
