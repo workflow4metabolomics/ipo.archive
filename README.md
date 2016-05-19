@@ -47,7 +47,7 @@ conda create -n r-ipo r-ipo r-batch`
 
 Travis
 ------
-[![Build Status](https://travis-ci.org/workflow4metabolomics/xcms.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/xcms)
+[![Build Status](https://travis-ci.org/workflow4metabolomics/ipo.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/ipo)
 
 Test and Deploy with Confidence. Easily sync your GitHub projects with Travis CI and you'll be testing your code in minutes!
 
