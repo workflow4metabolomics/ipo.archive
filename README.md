@@ -1,7 +1,7 @@
 IPO for Galaxy
 ===============
 
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/r-ipo/README.html) [![Build Status](https://travis-ci.org/workflow4metabolomics/ipo.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/ipo)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/r-ipo/README.html) [![Build Status](https://travis-ci.org/workflow4metabolomics/ipo.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/ipo)
 
 Our project
 -----------
@@ -29,7 +29,7 @@ Homepage: [https://galaxyproject.org/](https://galaxyproject.org/)
 
 Dependencies using Conda
 ------------------------
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/r-ipo/README.html)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/r-ipo/README.html) 
 
 [Conda](http://conda.pydata.org/) is package manager that among many other things can be used to manage Python packages.
 
