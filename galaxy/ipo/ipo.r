@@ -64,13 +64,28 @@ if (!is.null(listArguments[["zipfile"]])){
   zipfile= listArguments[["zipfile"]]; listArguments[["zipfile"]]=NULL
 }
 
-if (!is.null(listArguments[["library"]])){
-  directory=listArguments[["library"]]; listArguments[["library"]]=NULL
-  if(!file.exists(directory)){
-    error_message=paste("Cannot access the directory:",directory,". Please verify if the directory exists or not.")
-    print(error_message)
-    stop(error_message)
-  }
+
+if (!is.null(listArguments[["singlefile_galaxyPath"]])){
+    singlefile_galaxyPath = listArguments[["singlefile_galaxyPath"]]; listArguments[["singlefile_galaxyPath"]]=NULL
+    singlefile_sampleName = listArguments[["singlefile_sampleName"]]; listArguments[["singlefile_sampleName"]]=NULL
+}
+
+# single file case
+#@TODO: need to be refactoring
+if(exists("singlefile_galaxyPath") && (singlefile_galaxyPath!="")) {
+    if(!file.exists(singlefile_galaxyPath)){
+        error_message=paste("Cannot access the sample:",singlefile_sampleName,"located:",singlefile_galaxyPath,". Please, contact your administrator ... if you have one!")
+        print(error_message); stop(error_message)
+    }
+    
+    cwd=getwd()
+    dir.create("raw")
+    setwd("raw")
+    file.symlink(singlefile_galaxyPath,singlefile_sampleName)
+    setwd(cwd)
+    
+    directory = "raw"
+    
 }
 
 # We unzip automatically the chromatograms from the zip files.

@@ -14,6 +14,8 @@
 
         #if $inputs.input == "zip_file":
             zipfile $inputs.zip_file
+        #elif $inputs.input == "single_file":
+            singlefile_galaxyPath $inputs.single_file singlefile_sampleName $inputs.single_file.name
         #end if
 
         parametersOutput $parametersOutput
@@ -39,10 +41,14 @@
         <conditional name="inputs">
             <param name="input" type="select" label="Choose your inputs method" >
                 <option value="zip_file" selected="true">Zip file from your history containing your chromatograms</option>
+                <option value="single_file">mzXML file from your history</option>
             </param>
             <when value="zip_file">
                 <param name="zip_file" type="data" format="no_unzip.zip,zip" label="Zip file" />
-             </when>
+            </when>
+            <when value="single_file">
+                <param name="single_file" type="data" format="mzxml" label="Single file" />
+            </when>
         </conditional>
         
         <param name="samplebyclass" type="integer" value="2" label="Number of samples used per class to estimate the best parameters" help="Set to 0 to use the whole dataset. To save time, reduce this number" />
@@ -60,7 +66,7 @@
                 <param name="max_peakwidth" type="text" value="45,55" label="Max peak width range in seconds" help="[peakwidth]" optional="true" />
             </when>
 
-        <!-- matched Filter options -->
+            <!-- matched Filter options -->
             <when value="matchedFilter">
                 <param name="step" type="float" value="0.01" label="Step size to use for profile generation" help="[step] The peak detection algorithm creates extracted ion base peak chromatograms (EIBPC) on a fixed step size" optional="true" />
                 <param name="fwhm" type="integer" value="30" label="Full width at half maximum of matched filtration gaussian model peak" help="[fwhm] Only used to calculate the actual sigma" optional="true" />
@@ -77,17 +83,18 @@
     
     <tests>
         <test>
-            <param name="inputs|input" value="zip_file" />
-            <param name="inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <param name="inputs|input" value="single_file" />
+            <param name="inputs|single_file" value="MM14.mzML"  ftype="mzxml" />
             <param name="methods|method" value="centWave" />
-            <param name="methods|ppm" value="25" />
-            <param name="methods|min_peakwidth" value="20,30" />
-            <param name="methods|max_peakwidth" value="45,55" />
-            <output name="parametersOutput" file="faahKO_IPO_parameters4xcmsSet.tsv" />
+            <param name="methods|ppm" value="56" />
+            <param name="methods|min_peakwidth" value="3,9.5" />
+            <param name="methods|max_peakwidth" value="10,20" />
+            <output name="parametersOutput" file="MM14_IPO_parameters4xcmsSet.tsv" />
         </test>
         <test>
             <param name="inputs|input" value="zip_file" />
             <param name="inputs|zip_file" value="sacuri_2files.zip"  ftype="zip" />
+            <param name="samplebyclass" value="1" />
             <param name="methods|method" value="centWave" />
             <param name="methods|ppm" value="25" />
             <param name="methods|min_peakwidth" value="20,30" />

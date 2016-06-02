@@ -1,10 +1,10 @@
-
 ##
 ## This function launch IPO functions to get the best parameters for xcmsSet
 ## A sample among the whole dataset is used to save time
 ##
 ipo4xcmsSet = function(directory, parametersOutput, listArguments, samplebyclass=4) {
     setwd(directory)
+    #@TODO: check the behaviour of direcory = "." ?
     files = list.files(".", recursive=T)  # "KO/ko15.CDF" "KO/ko16.CDF" "WT/wt15.CDF" "WT/wt16.CDF"
     files_classes = basename(dirname(files))    # "KO", "KO", "WT", "WT"
     
