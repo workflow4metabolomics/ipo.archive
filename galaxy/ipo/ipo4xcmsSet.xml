@@ -61,7 +61,7 @@
 
             <!-- centWave Filter options -->
             <when value="centWave">
-                <param name="ppm" type="integer" value="25" label="Max tolerated ppm m/z deviation in consecutive scans in ppm" help="[ppm]" optional="false" />
+                <param name="ppm" type="text" value="5,25" label="Max tolerated ppm m/z deviation in consecutive scans in ppm" help="[ppm]" optional="false" />
                 <param name="min_peakwidth" type="text" value="15,25" label="Min peak width range in seconds" help="[peakwidth]" optional="true" />
                 <param name="max_peakwidth" type="text" value="45,55" label="Max peak width range in seconds" help="[peakwidth]" optional="true" />
             </when>
