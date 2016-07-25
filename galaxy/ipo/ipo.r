@@ -99,18 +99,24 @@ if(exists("zipfile") && (zipfile!="")) {
     #list all file in the zip file
     #zip_files=unzip(zipfile,list=T)[,"Name"]
 
+    # Because IPO only want raw data in its working directory
+    dir.create("ipoworkingdir")
+    setwd("ipoworkingdir")
+    file.symlink(zipfile, ".")
 
     #unzip
     suppressWarnings(unzip(zipfile, unzip="unzip"))
 
     #get the directory name
-    filesInZip=unzip(zipfile, list=T); 
+    filesInZip=unzip(zipfile, list=T);
     directories=unique(unlist(lapply(strsplit(filesInZip$Name,"/"), function(x) x[1])));
     directories=directories[!(directories %in% c("__MACOSX")) & file.info(directories)$isdir]
     directory = "."
     if (length(directories) == 1) directory = directories
 
     cat("files_root_directory\t",directory,"\n")
+
+    file.remove(zipfile)
 
 
 }
