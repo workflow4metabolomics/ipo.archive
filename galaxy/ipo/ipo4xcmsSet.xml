@@ -91,6 +91,9 @@
             <param name="methods|max_peakwidth" value="10,20" />
             <output name="parametersOutput" file="MM14_IPO_parameters4xcmsSet.tsv" />
         </test>
+        <!--Failed:
+                Error in resultIncreased(history) : 
+                        No isotopes have been detected, peak picking not optimizable by IPO!-->
         <!--<test>
             <param name="inputs|input" value="zip_file" />
             <param name="inputs|zip_file" value="sacuri_2files.zip"  ftype="zip" />
@@ -101,7 +104,8 @@
             <param name="methods|max_peakwidth" value="45,55" />
             <output name="parametersOutput" file="sacuri_2files_centWave_IPO_parameters4xcmsSet.tsv" />
         </test>-->
-	<test>
+        <!-- Too long for Travis CI -->
+        <!--<test>
             <param name="inputs|input" value="zip_file" />
             <param name="inputs|zip_file" value="sacuri_2files.zip"  ftype="zip" />
             <param name="samplebyclass" value="1" />
@@ -109,7 +113,7 @@
             <param name="methods|step" value="0.01" />
             <param name="methods|fwhm" value="4" />
             <output name="parametersOutput" file="sacuri_2files_matchedFilter_IPO_parameters4xcmsSet.tsv" />
-        </test>
+        </test>-->
     </tests>
     
     <help><![CDATA[
