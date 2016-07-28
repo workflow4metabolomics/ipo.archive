@@ -1,2 +1,2 @@
-"fwhm"	"snthresh"	"step"	"steps"	"sigma"	"max"	"mzdiff"	"index"	"nSlaves"
-25	3	0.15	2.5	10.6166128758281	5	0.425	FALSE	1
+"step"	"fwhm"	"snthresh"	"steps"	"sigma"	"max"	"mzdiff"	"index"
+0.15	25	3	2.5	10.6166128758281	5	0.425	FALSE

@@ -25,12 +25,27 @@
         ## profmethod $profmethod 
         nSlaves \${GALAXY_SLOTS:-1} method $methods.method 
         #if $methods.method == "centWave":
-            ppm $methods.ppm
+            ppm "c($methods.ppm)"
             min_peakwidth "c($methods.min_peakwidth)"
             max_peakwidth "c($methods.max_peakwidth)"
+            #if $methods.options_c.option == "show":
+                mzdiff "c($methods.options_c.mzdiff)"
+                snthresh "c($methods.options_c.snthresh)"
+                integrate "c($methods.options_c.integrate)"
+                noise "c($methods.options_c.noise)"
+                prefilter "c($methods.options_c.prefilter)"
+                prefilter_value "c($methods.options_c.prefilter_value)"
+            #end if
         #elif $methods.method == "matchedFilter":
-            step $methods.step
-            fwhm $methods.fwhm
+            step "c($methods.step)"
+            fwhm "c($methods.fwhm)"
+            #if $methods.options_m.option == "show":
+                sigma "c($methods.options_m.sigma)"
+                max "c($methods.options_m.max)"
+                snthresh "c($methods.options_m.snthresh)"
+                mzdiff "c($methods.options_m.mzdiff)"
+                steps "c($methods.options_m.steps)"
+            #end if
         #end if
 
         @COMMAND_LOG_EXIT@ 2> /tmp/log.err
@@ -61,15 +76,47 @@
 
             <!-- centWave Filter options -->
             <when value="centWave">
-                <param name="ppm" type="text" value="5,25" label="Max tolerated ppm m/z deviation in consecutive scans in ppm" help="[ppm]" optional="false" />
-                <param name="min_peakwidth" type="text" value="15,25" label="Min peak width range in seconds" help="[peakwidth]" optional="true" />
-                <param name="max_peakwidth" type="text" value="45,55" label="Max peak width range in seconds" help="[peakwidth]" optional="true" />
+                <param name="ppm" type="text" value="17,32" label="Range for Max tolerated ppm m/z deviation in consecutive scans in ppm" optional="false" help="[ppm] (ex: 25 or 17,32)" />
+                <param name="min_peakwidth" type="text" value="15,25" label="Range for Min peak width range in seconds" optional="true" help="[min_peakwidth] (ex: 20 or 12,18)" />
+                <param name="max_peakwidth" type="text" value="45,55" label="Range for Max peak width range in seconds" optional="true" help="[max_peakwidth] (ex: 50 or 35,65)" />
+                <conditional name="options_c">
+                    <param name="option" type="select" label="Advanced options" >
+                        <option value="show">show</option>
+                        <option value="hide" selected="true">hide</option>
+                    </param>
+                    <when value="show">
+                        <param name="snthresh" type="text" value="10" label="Range for Signal/Noise threshold" help="[snthresh] Signal to noise ratio cutoff (ex: 10 or 5,15)" />
+                        <param name="mzdiff" type="text" value="-0.001" label="Range for Min m/z difference" help="[mzdiff] Min m/z difference for peaks with overlapping RT (ex: -0.001 or -0.001,0.010)" />
+                        <param name="integrate" type="select" label="Peak limits method" help="[integrate]" multiple="true" >
+                            <option value="1">1 - peak limits based on smoothed 2nd derivative (less precise)</option>
+                            <option value="2">2 - peak limits based on real data (more sensitive to noise)</option>
+                        </param>
+                        <param name="prefilter" type="text" value="3" label="Range for the k value for the Prefilter step for the first phase" help="[prefilter] Mass traces are only retained if they contain at least ‘k’ peaks with intensity >= ‘I’ (ex: 3 or 2,3)"/>
+                        <param name="prefilter_value" type="text" value="100" label="Range for the I value for the Prefilter step for the first phase" help="[prefilter_value] Mass traces are only retained if they contain at least ‘k’ peaks with intensity >= ‘I’ (ex: 100 or 95,105)"/>
+                        <param name="noise" type="text" value="0" label="Range for the Noise filter" help="[noise] optional argument which is useful for data that was centroided without any intensity threshold, centroids with intensity smaller than ‘noise’ are omitted from ROI detection (ex: 0 or 0,0.1)"/>
+                    </when>
+                    <when value="hide" />
+                </conditional>
             </when>
 
             <!-- matched Filter options -->
             <when value="matchedFilter">
-                <param name="step" type="float" value="0.01" label="Step size to use for profile generation" help="[step] The peak detection algorithm creates extracted ion base peak chromatograms (EIBPC) on a fixed step size" optional="true" />
-                <param name="fwhm" type="integer" value="30" label="Full width at half maximum of matched filtration gaussian model peak" help="[fwhm] Only used to calculate the actual sigma" optional="true" />
+                <param name="step" type="text" value="0.1" label="Range for Step size to use for profile generation" optional="true" help="[step] The peak detection algorithm creates extracted ion base peak chromatograms (EIBPC) on a fixed step size (ex: 0 or 0.05,0.15)" />
+                <param name="fwhm" type="text" value="25,35" label="Range for Full width at half maximum of matched filtration gaussian model peak" optional="true" help="[fwhm] Only used to calculate the actual sigma (ex: 30 or 25,35)" />
+                <conditional name="options_m">
+                    <param name="option" type="select" label="Advanced options" >
+                        <option value="show">show</option>
+                        <option value="hide" selected="true">hide</option>
+                    </param>
+                    <when value="show">
+                        <param name="sigma" type="text" value="0" label="sigma" help="Range for standard deviation (fwhm/2.3548) (ex: 0 or 0,1)" />
+                        <param name="max" type="text" value="5" label="Range for Maximum number of peaks per extracted ion chromatogram" help="[max] (ex: 5 or 4,6)" />
+                        <param name="snthresh" type="text" value="10" label="Range for Signal to noise ratio cutoff" help="[snthresh] (ex: 10 or 3,17)" />
+                        <param name="steps" type="text" value="2" label="Range for Number of steps to merge prior to filtration" help="[steps] The peak identification algorithm combines a given number of EIBPCs prior to filtration and peak detection, as defined by the steps argument (ex: 2 or 1,3)" />
+                        <param name="mzdiff" type="text" value="0" label="m/z difference" help="Range for min m/z difference for peaks with overlapping RT (0.8-step*steps) (ex: 2 or 1,3)" />
+                    </when>
+                    <when value="hide" />
+                </conditional>
             </when>
         </conditional>       
 
@@ -85,15 +132,14 @@
         <test>
             <param name="inputs|input" value="single_file" />
             <param name="inputs|single_file" value="MM14.mzML"  ftype="mzxml" />
+            <param name="samplebyclass" value="0" />
             <param name="methods|method" value="centWave" />
             <param name="methods|ppm" value="56" />
             <param name="methods|min_peakwidth" value="3,9.5" />
             <param name="methods|max_peakwidth" value="10,20" />
             <output name="parametersOutput" file="MM14_IPO_parameters4xcmsSet.tsv" />
         </test>
-        <!--Failed:
-                Error in resultIncreased(history) : 
-                        No isotopes have been detected, peak picking not optimizable by IPO!-->
+        <!-- Too long for Travis CI -->
         <!--<test>
             <param name="inputs|input" value="zip_file" />
             <param name="inputs|zip_file" value="sacuri_2files.zip"  ftype="zip" />
@@ -110,9 +156,22 @@
             <param name="inputs|zip_file" value="sacuri_2files.zip"  ftype="zip" />
             <param name="samplebyclass" value="1" />
             <param name="methods|method" value="matchedFilter" />
-            <param name="methods|step" value="0.01" />
-            <param name="methods|fwhm" value="4" />
+            <param name="methods|step" value="0.05,0.15" />
+            <param name="methods|fwhm" value="25,35" />
             <output name="parametersOutput" file="sacuri_2files_matchedFilter_IPO_parameters4xcmsSet.tsv" />
+        </test>-->
+        <!--Failed:
+                Error in resultIncreased(history) : 
+                        No isotopes have been detected, peak picking not optimizable by IPO!-->
+        <!--<test>
+            <param name="inputs|input" value="zip_file" />
+            <param name="inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <param name="methods|method" value="centWave" />
+            <param name="methods|ppm" value="25" />
+            <param name="methods|min_peakwidth" value="15,25" />
+            <param name="methods|min_peakwidth" value="20,30" />
+            <param name="methods|max_peakwidth" value="45,55" />
+            <output name="parametersOutput" file="faahKO_IPO_parameters4xcmsSet.tsv" />
         </test>-->
     </tests>
     
