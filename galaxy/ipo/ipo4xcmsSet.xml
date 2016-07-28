@@ -37,14 +37,14 @@
                 prefilter_value "c($methods.options_c.prefilter_value)"
             #end if
         #elif $methods.method == "matchedFilter":
-            step $methods.step
-            fwhm $methods.fwhm
+            step "c($methods.step)"
+            fwhm "c($methods.fwhm)"
             #if $methods.options_m.option == "show":
-                sigma "$methods.options_m.sigma"
-                max $methods.options_m.max
-                snthresh $methods.options_m.snthresh
-                mzdiff $methods.options_m.mzdiff
-                steps $methods.options_m.steps
+                sigma "c($methods.options_m.sigma)"
+                max "c($methods.options_m.max)"
+                snthresh "c($methods.options_m.snthresh)"
+                mzdiff "c($methods.options_m.mzdiff)"
+                steps "c($methods.options_m.steps)"
             #end if
         #end if
 
@@ -87,7 +87,7 @@
                     <when value="show">
                         <param name="snthresh" type="text" value="10" label="Range for Signal/Noise threshold" help="[snthresh] Signal to noise ratio cutoff (ex: 10 or 5,15)" />
                         <param name="mzdiff" type="text" value="-0.001" label="Range for Min m/z difference" help="[mzdiff] Min m/z difference for peaks with overlapping RT (ex: -0.001 or -0.001,0.010)" />
-                        <param name="integrate" type="select" label="Peak limits method" help="[integrate]" >
+                        <param name="integrate" type="select" label="Peak limits method" help="[integrate]" multiple="true" >
                             <option value="1">1 - peak limits based on smoothed 2nd derivative (less precise)</option>
                             <option value="2">2 - peak limits based on real data (more sensitive to noise)</option>
                         </param>
@@ -132,15 +132,14 @@
         <test>
             <param name="inputs|input" value="single_file" />
             <param name="inputs|single_file" value="MM14.mzML"  ftype="mzxml" />
+            <param name="samplebyclass" value="0" />
             <param name="methods|method" value="centWave" />
             <param name="methods|ppm" value="56" />
             <param name="methods|min_peakwidth" value="3,9.5" />
             <param name="methods|max_peakwidth" value="10,20" />
             <output name="parametersOutput" file="MM14_IPO_parameters4xcmsSet.tsv" />
         </test>
-        <!--Failed:
-                Error in resultIncreased(history) : 
-                        No isotopes have been detected, peak picking not optimizable by IPO!-->
+        <!-- Too long for Travis CI -->
         <!--<test>
             <param name="inputs|input" value="zip_file" />
             <param name="inputs|zip_file" value="sacuri_2files.zip"  ftype="zip" />
@@ -157,9 +156,22 @@
             <param name="inputs|zip_file" value="sacuri_2files.zip"  ftype="zip" />
             <param name="samplebyclass" value="1" />
             <param name="methods|method" value="matchedFilter" />
-            <param name="methods|step" value="0.01" />
-            <param name="methods|fwhm" value="4" />
+            <param name="methods|step" value="0.05,0.15" />
+            <param name="methods|fwhm" value="25,35" />
             <output name="parametersOutput" file="sacuri_2files_matchedFilter_IPO_parameters4xcmsSet.tsv" />
+        </test>-->
+        <!--Failed:
+                Error in resultIncreased(history) : 
+                        No isotopes have been detected, peak picking not optimizable by IPO!-->
+        <!--<test>
+            <param name="inputs|input" value="zip_file" />
+            <param name="inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <param name="methods|method" value="centWave" />
+            <param name="methods|ppm" value="25" />
+            <param name="methods|min_peakwidth" value="15,25" />
+            <param name="methods|min_peakwidth" value="20,30" />
+            <param name="methods|max_peakwidth" value="45,55" />
+            <output name="parametersOutput" file="faahKO_IPO_parameters4xcmsSet.tsv" />
         </test>-->
     </tests>
     
