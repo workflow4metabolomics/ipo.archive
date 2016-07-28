@@ -1,6 +1,6 @@
 <tool id="ipo4xcmsSet" name="IPO for xcmsSet" version="0.0.3">
     
-    <description>Filtration and Peak Identification using xcmsSet function from xcms R package to preprocess LC/MS data for relative quantification and statistical analysis </description>
+    <description>IPO optimization process for xcms.xcmsSet</description>
     
     <macros>
         <import>macros.xml</import>
