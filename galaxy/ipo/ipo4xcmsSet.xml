@@ -10,7 +10,7 @@
     <expand macro="stdio"/>
     
     <command><![CDATA[
-        @COMMAND_SCRIPT@/ipo4xcmsSet.r
+        LANG=C Rscript $__tool_directory__/ipo4xcmsSet.r
 
         #if $inputs.input == "zip_file":
             zipfile $inputs.zip_file

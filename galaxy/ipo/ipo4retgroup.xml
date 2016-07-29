@@ -10,7 +10,7 @@
     <expand macro="stdio"/>
     
     <command><![CDATA[
-        @COMMAND_SCRIPT@/ipo4retgroup.r
+        LANG=C Rscript $__tool_directory__/ipo4retgroup.r
 
         image $image
 
