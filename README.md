@@ -40,7 +40,7 @@ Dependencies using Conda
 #To install the IPO R library using conda:
 conda install r-ipo r-batch
 #To set an environment:
-conda create -n r-ipo r-ipo r-batch`
+conda create -n r-ipo r-ipo r-batch
 #To activate the environment:
 . activate r-ipo
 ```
