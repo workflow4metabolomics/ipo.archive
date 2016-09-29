@@ -87,7 +87,7 @@
                     <when value="show">
                         <param name="snthresh" type="text" value="10" label="Range for Signal/Noise threshold" help="[snthresh] Signal to noise ratio cutoff (ex: 10 or 5,15)" />
                         <param name="mzdiff" type="text" value="-0.001" label="Range for Min m/z difference" help="[mzdiff] Min m/z difference for peaks with overlapping RT (ex: -0.001 or -0.001,0.010)" />
-                        <param name="integrate" type="select" label="Peak limits method" help="[integrate]" multiple="true" >
+                        <param name="integrate" type="select" label="Peak limits method" help="[integrate]" >
                             <option value="1">1 - peak limits based on smoothed 2nd derivative (less precise)</option>
                             <option value="2">2 - peak limits based on real data (more sensitive to noise)</option>
                         </param>
