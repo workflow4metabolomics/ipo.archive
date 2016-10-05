@@ -131,7 +131,7 @@
                         <option value="loess">loess</option>
                     </param>
                     <param name="extra" type="text" value="1" label="Range for Number of extra peaks to allow in retention time correction correction groups" help="[extra] (ex: 1 or 1,3)" />
-                    <param name="missing" type="integer" value="1" label="Range for Number of missing samples to allow in retention time correction groups" help="[missing] (ex: 1or 1,3)" />
+                    <param name="missing" type="text" value="1" label="Range for Number of missing samples to allow in retention time correction groups" help="[missing] (ex: 1or 1,3)" />
 
                     <conditional name="options">
                         <param name="option" type="select" label="Advanced options">
@@ -139,7 +139,7 @@
                             <option value="hide" selected="true">hide</option>
                         </param>
                         <when value="show">
-                            <param name="span" type="float" value="0.1,0.3" label="Range for Degree of smoothing for local polynomial regression fitting" help="[span] (ex: 0.2 or 0.1,0.3)"/>
+                            <param name="span" type="text" value="0.1,0.3" label="Range for Degree of smoothing for local polynomial regression fitting" help="[span] (ex: 0.2 or 0.1,0.3)"/>
                             <!-- @TODO multiple="true" -->
                             <param name="family" type="select" label="Family" help="[family] if gaussian fitting is by least-squares with no outlier removal, and if symmetric a re descending M estimator is used with Tukey's biweight function, allowing outlier removal">
                                 <option value="gaussian" selected="true">gaussian</option>
@@ -171,8 +171,27 @@
     </outputs>
     
     <tests>
+        <!-- FAIL
+            no increase stopping
+            There were 21 warnings (use warnings() to see them)
+
         <test>
             <param name="image" value="faahKO.xset.RData"/>
+            <param name="group|methods|method" value="density"/>
+            <param name="group|methods|bw" value="22,38"/>
+            <param name="group|methods|minfrac" value="0.3,0.7"/>
+            <param name="group|methods|mzwid" value="0.015,0.035"/>
+            <param name="retcor|methods|method" value="peakgroups"/>
+            <param name="retcor|methods|smooth" value="loess"/>
+            <param name="retcor|methods|extra" value="1"/>
+            <param name="retcor|methods|missing" value="1"/>
+            <param name="zipfile_load_conditional|zipfile_load_select" value="yes" />
+            <param name="zipfile_load_conditional|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <output name="parametersOutput" file="faahKO_IPO_parameters4retgroup.tsv" />
+        </test>
+        -->
+        <test>
+            <param name="image" value="MM14_IPO_ipo4xcmsSet.RData"/>
             <param name="group|methods|method" value="density"/>
             <param name="group|methods|bw" value="22,38"/>
             <param name="group|methods|minfrac" value="0.3,0.7"/>

@@ -9,6 +9,7 @@ sink(log_file, type = "output")
 
 
 # ----- PACKAGE -----
+options(bitmapType='cairo')
 cat("\tPACKAGE INFO\n")
 #pkgs=c("xcms","batch")
 pkgs=c("parallel","BiocGenerics", "Biobase", "Rcpp", "mzR", "xcms","rsm","igraph","CAMERA","IPO","snow","batch")
@@ -34,6 +35,10 @@ cat("\n\n");
 # ----- ARGUMENTS PROCESSING -----
 cat("\tINFILE PROCESSING INFO\n")
 
+#image is an .RData file necessary to use xset variable given by previous tools
+if (!is.null(listArguments[["image"]])){
+  load(listArguments[["image"]]); listArguments[["image"]]=NULL
+}
 
 #Import the different functions
 source_local("lib.r")
@@ -136,7 +141,7 @@ cat("\n\n")
 cat("\tMAIN PROCESSING INFO\n")
 
 
-ipo4xcmsSet(directory, parametersOutput, listArguments, samplebyclass)
+ipo4retgroup(xset, directory, parametersOutput, listArguments, samplebyclass)
 
 
 

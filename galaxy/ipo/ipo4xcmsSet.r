@@ -9,6 +9,7 @@ sink(log_file, type = "output")
 
 
 # ----- PACKAGE -----
+options(bitmapType='cairo')
 cat("\tPACKAGE INFO\n")
 #pkgs=c("xcms","batch")
 pkgs=c("parallel","BiocGenerics", "Biobase", "Rcpp", "mzR", "xcms","rsm","igraph","CAMERA","IPO","snow","batch")
@@ -45,6 +46,10 @@ cat("\n\n")
 # ----- PROCESSING INFILE -----
 cat("\tARGUMENTS PROCESSING INFO\n")
 
+xsetRdataOutput = paste("ipo4xcmsSet","RData",sep=".")
+if (!is.null(listArguments[["xsetRdataOutput"]])){
+  xsetRdataOutput = listArguments[["xsetRdataOutput"]]; listArguments[["xsetRdataOutput"]]=NULL
+}
 
 parametersOutput = "parametersOutput.tsv"
 if (!is.null(listArguments[["parametersOutput"]])){
@@ -136,7 +141,7 @@ cat("\n\n")
 cat("\tMAIN PROCESSING INFO\n")
 
 
-ipo4xcmsSet(directory, parametersOutput, listArguments, samplebyclass)
+xset = ipo4xcmsSet(directory, parametersOutput, listArguments, samplebyclass)
 
 
 
@@ -145,8 +150,14 @@ cat("\n\n")
 
 # ----- EXPORT -----
 
-cat("\tEXPORTING INFO\n")
+cat("\tXSET OBJECT INFO\n")
+print(xset)
+#delete the parameters to avoid the passage to the next tool in .RData image
 
+
+#saving R data in .Rdata file to save the variables used in the present tool
+objects2save = c("xset","zipfile")
+save(list=objects2save[objects2save %in% ls()], file=xsetRdataOutput)
 
 cat("\n\n")
 
