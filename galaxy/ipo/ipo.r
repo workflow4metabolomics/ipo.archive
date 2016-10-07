@@ -9,6 +9,7 @@ sink(log_file, type = "output")
 
 
 # ----- PACKAGE -----
+Sys.setenv("DISPLAY"=":0.0")
 print(capabilities())
 options(bitmapType='cairo')
 print(capabilities())
