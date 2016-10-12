@@ -9,6 +9,11 @@ sink(log_file, type = "output")
 
 
 # ----- PACKAGE -----
+Sys.setenv("DISPLAY"=":0.0")
+print(capabilities())
+options(bitmapType='cairo')
+print(capabilities())
+
 cat("\tPACKAGE INFO\n")
 #pkgs=c("xcms","batch")
 pkgs=c("parallel","BiocGenerics", "Biobase", "Rcpp", "mzR", "xcms","rsm","igraph","CAMERA","IPO","snow","batch")
