@@ -18,10 +18,10 @@ for(pkg in pkgs) {
   cat(pkg,"\t",as.character(packageVersion(pkg)),"\n",sep="")
 }
 source_local <- function(fname){ argv <- commandArgs(trailingOnly = FALSE); base_dir <- dirname(substring(argv[grep("--file=", argv)], 8)); source(paste(base_dir, fname, sep="/")) }
-cat("\n\n"); 
+cat("\n\n");
 
 
-
+print(capabilities())
 
 
 # ----- ARGUMENTS -----
@@ -71,26 +71,30 @@ if (!is.null(listArguments[["zipfile"]])){
 
 
 if (!is.null(listArguments[["singlefile_galaxyPath"]])){
-    singlefile_galaxyPath = listArguments[["singlefile_galaxyPath"]]; listArguments[["singlefile_galaxyPath"]]=NULL
-    singlefile_sampleName = listArguments[["singlefile_sampleName"]]; listArguments[["singlefile_sampleName"]]=NULL
+    singlefile_galaxyPath = unlist(strsplit(listArguments[["singlefile_galaxyPath"]],",")); listArguments[["singlefile_galaxyPath"]]=NULL
+    singlefile_sampleName = unlist(strsplit(listArguments[["singlefile_sampleName"]],",")); listArguments[["singlefile_sampleName"]]=NULL
 }
 
 # single file case
 #@TODO: need to be refactoring
 if(exists("singlefile_galaxyPath") && (singlefile_galaxyPath!="")) {
-    if(!file.exists(singlefile_galaxyPath)){
-        error_message=paste("Cannot access the sample:",singlefile_sampleName,"located:",singlefile_galaxyPath,". Please, contact your administrator ... if you have one!")
-        print(error_message); stop(error_message)
-    }
-    
+
     cwd=getwd()
     dir.create("raw")
     setwd("raw")
-    file.symlink(singlefile_galaxyPath,singlefile_sampleName)
+
+    for (singlefile_galaxyPath_i in seq(1:length(singlefile_galaxyPath))) {
+        if(!file.exists(singlefile_galaxyPath[singlefile_galaxyPath_i])){
+            error_message=paste("Cannot access the sample:",singlefile_sampleName[singlefile_galaxyPath_i],"located:",singlefile_galaxyPath[singlefile_galaxyPath_i],". Please, contact your administrator ... if you have one!")
+            print(error_message); stop(error_message)
+        }
+        file.symlink(singlefile_galaxyPath[singlefile_galaxyPath_i],singlefile_sampleName[singlefile_galaxyPath_i])
+    }
+
     setwd(cwd)
-    
+
     directory = "raw"
-    
+
 }
 
 # We unzip automatically the chromatograms from the zip files.
@@ -157,4 +161,3 @@ cat("\n\n")
 
 
 cat("\tDONE\n")
-

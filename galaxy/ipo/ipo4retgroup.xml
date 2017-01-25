@@ -1,14 +1,14 @@
 <tool id="ipo4retgroup" name="IPO for group and retcor" version="0.0.1">
-    
+
     <description>IPO optimization process for xcms.group and xcms.retcor</description>
-    
+
     <macros>
         <import>macros.xml</import>
     </macros>
 
     <expand macro="requirements"/>
     <expand macro="stdio"/>
-    
+
     <command><![CDATA[
         LANG=C Rscript $__tool_directory__/ipo4retgroup.r
 
@@ -22,7 +22,7 @@
 
         ## group methods
 
-        sleep 0.001 
+        sleep 0.001
         #if $group.methods.method == "density":
             bw "c($group.methods.bw)"
             minfrac "c($group.methods.minfrac)"
@@ -30,7 +30,7 @@
             ## minsamp "c($group.methods.minsamp)"
             #if $group.methods.density_options.option == "show":
                 max "c($group.methods.density_options.max)"
-            #end if 
+            #end if
         #end if
 
 
@@ -65,15 +65,15 @@
             retcorMethod none
         #end if
 
-        @COMMAND_ZIPFILE_LOAD@
+        @COMMAND_FILE_LOAD@
 
-        @COMMAND_LOG_EXIT@ 
+        @COMMAND_LOG_EXIT@
     ]]></command>
-    
+
     <inputs>
 
         <param name="image" type="data" format="rdata.xcms.raw,rdata.xcms.group,rdata.xcms.retcor,rdata" label="xset RData file" help="output file from another function xcms (xcmsSet, retcor etc.)" />
-        
+
         <param name="samplebyclass" type="integer" value="2" label="Number of samples used per class to estimate the best parameters" help="Set to 0 to use the whole dataset. To save time, reduce this number" />
 
         <section name="group" title="Group Options" expanded="False">
@@ -87,7 +87,7 @@
                     <param name="minfrac" type="text" value="0.3,0.7" label="Range for Minimum fraction of samples necessary" help="[minfrac] in at least one of the sample groups for it to be a valid group (ex: 0.5 or 0.3,0.7)" />
                     <param name="mzwid" type="text" value="0.015,0.035" label="Range for Width of overlapping m/z slices" help="[mzwid] to use for creating peak density chromatograms and grouping peaks across samples (ex: 0.25 or 0.015,0.035)" />
                     <!--
-                    <param name="minsamp" type="hidden" value="1" label="Range for Minimum number of samples necessary in at least one of the sample groups for it to be a valid group" help="[minsamp] (ex: 1 or 0,5" /> 
+                    <param name="minsamp" type="hidden" value="1" label="Range for Minimum number of samples necessary in at least one of the sample groups for it to be a valid group" help="[minsamp] (ex: 1 or 0,5" />
                     -->
                     <conditional name="density_options">
                         <param name="option" type="select" label="Advanced options">
@@ -110,8 +110,8 @@
         <section name="retcor" title="Retcor Options" expanded="False">
             <conditional name="methods">
                 <param name="method" type="select" label="Method to use for retention time correction" help="[method] See the help section below" >
-                    <option value="obiwarp" >obiwarp</option>
-                    <option value="peakgroups" selected="peakgroups">peakgroups</option>
+                    <option value="obiwarp">obiwarp</option>
+                    <option value="peakgroups">peakgroups</option>
                 </param>
                 <when value="obiwarp">
                     <param name="profStep" type="text" value="0.7,1.0" label="Range for Step size (in m/z)" help="[profStep] to use for profile generation from the raw data files (ex: 1 or 0.7 1.0)" />
@@ -125,8 +125,8 @@
                     ## $factorGap [1] 1
                     ## $localAlignment [1] 0
                     -->
-                </when> 
-                <when value="peakgroups">   
+                </when>
+                <when value="peakgroups">
                     <param name="smooth" type="select" label="Smooth method" help="[smooth] either 'loess’ for non-linear alignment or ‘linear’ for linear alignment" >
                         <option value="loess">loess</option>
                     </param>
@@ -159,17 +159,17 @@
                 </when>
             </conditional>
 
-        </section>    
+        </section>
 
-        <expand macro="zipfile_load"/>
+        <expand macro="file_load"/>
 
     </inputs>
-    
+
     <outputs>
         <data name="parametersOutput" format="tabular" label="IPO_parameters4xcmsSet.tsv" />
         <data name="log" format="txt" label="ipo4xcmsSet.log.txt" />
     </outputs>
-    
+
     <tests>
         <!-- FAIL
             no increase stopping
@@ -185,13 +185,13 @@
             <param name="retcor|methods|smooth" value="loess"/>
             <param name="retcor|methods|extra" value="1"/>
             <param name="retcor|methods|missing" value="1"/>
-            <param name="zipfile_load_conditional|zipfile_load_select" value="yes" />
-            <param name="zipfile_load_conditional|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <param name="file_load_conditional|file_load_select" value="yes" />
+            <param name="file_load_conditional|inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
             <output name="parametersOutput" file="faahKO_IPO_parameters4retgroup.tsv" />
         </test>
         -->
         <test>
-            <param name="image" value="MM14_IPO_ipo4xcmsSet.RData"/>
+            <param name="image" value="MM-xset-merge.RData"/>
             <param name="group|methods|method" value="density"/>
             <param name="group|methods|bw" value="22,38"/>
             <param name="group|methods|minfrac" value="0.3,0.7"/>
@@ -200,12 +200,13 @@
             <param name="retcor|methods|smooth" value="loess"/>
             <param name="retcor|methods|extra" value="1"/>
             <param name="retcor|methods|missing" value="1"/>
-            <param name="zipfile_load_conditional|zipfile_load_select" value="yes" />
-            <param name="zipfile_load_conditional|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
-            <output name="parametersOutput" file="MM14_IPO_parameters4retgroup.tsv" />
+            <param name="file_load_conditional|file_load_select" value="yes" />
+            <param name="file_load_conditional|inputs|input" value="single_file" />
+            <param name="file_load_conditional|inputs|single_file" value="MM8.mzML,MM14.mzML"  ftype="mzxml" />
+            <output name="parametersOutput" file="MM_IPO_parameters4retgroup.tsv" />
         </test>
     </tests>
-    
+
     <help><![CDATA[
 
 @HELP_AUTHORS@
@@ -230,7 +231,7 @@ Workflow position
 ========================= ================= ======= =========
 Name                      output file       format  parameter
 ========================= ================= ======= =========
-NA                        NA                zip     NA       
+NA                        NA                zip     NA
 ========================= ================= ======= =========
 
 
@@ -316,7 +317,7 @@ Extraction method for peaks detection
 
 **Matched Filter**
 
-    | One parameter to consider is the Gaussian model peak width used for matched filtration,an integral part of the peak detection algorithm. 
+    | One parameter to consider is the Gaussian model peak width used for matched filtration,an integral part of the peak detection algorithm.
     | For a discussion of how model peak width affects the signal to noise ratio, see Danielsson et al. (2002).
 
 
