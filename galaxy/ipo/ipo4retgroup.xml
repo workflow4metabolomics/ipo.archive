@@ -12,9 +12,9 @@
     <command><![CDATA[
         LANG=C Rscript $__tool_directory__/ipo4retgroup.r
 
-        image $image
+        image '$image'
 
-        parametersOutput $parametersOutput
+        parametersOutput '$parametersOutput'
 
         samplebyclass $samplebyclass
 
@@ -194,7 +194,7 @@
             <param name="image" value="MM-xset-merge.RData"/>
             <param name="group|methods|method" value="density"/>
             <param name="group|methods|bw" value="22,38"/>
-            <param name="group|methods|minfrac" value="0.3,0.7"/>
+            <param name="group|methods|minfrac" value="1"/>
             <param name="group|methods|mzwid" value="0.015,0.035"/>
             <param name="retcor|methods|method" value="peakgroups"/>
             <param name="retcor|methods|smooth" value="loess"/>

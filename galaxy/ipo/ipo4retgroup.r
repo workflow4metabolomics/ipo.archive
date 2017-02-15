@@ -21,9 +21,6 @@ source_local <- function(fname){ argv <- commandArgs(trailingOnly = FALSE); base
 cat("\n\n");
 
 
-print(capabilities())
-
-
 # ----- ARGUMENTS -----
 cat("\tARGUMENTS INFO\n")
 listArguments = parseCommandArgs(evaluate=FALSE) #interpretation of arguments given in command line as an R list of objects
