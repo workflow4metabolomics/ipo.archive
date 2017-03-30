@@ -1,7 +1,7 @@
-bw	5.959782
-mzwid	1e-04
-span	0.05650336
+bw	4.168192
+span	0.22
 minfrac	1
+mzwid	0.25
 retcorMethod	loess
 smooth	loess
 extra	1

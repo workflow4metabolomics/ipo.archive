@@ -122,7 +122,7 @@ if(exists("zipfile") && (zipfile!="")) {
 
     cat("files_root_directory\t",directory,"\n")
 
-    file.remove(zipfile)
+    file.remove(basename(zipfile))
 
 
 }
@@ -153,6 +153,7 @@ cat("\n\n")
 
 cat("\tEXPORTING INFO\n")
 
+#save.image(file="ipo-retcor.RData")
 
 cat("\n\n")
 

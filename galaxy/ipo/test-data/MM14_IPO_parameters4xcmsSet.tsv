@@ -1,2 +1,11 @@
-"min_peakwidth"	"max_peakwidth"	"mzdiff"	"ppm"	"snthresh"	"noise"	"prefilter"	"value_of_prefilter"	"mzCenterFun"	"integrate"	"fitgauss"
-5.275	13.5	0.01	56	10	0	3	100	"wMean"	1	FALSE
+min_peakwidth	5.275
+max_peakwidth	13.5
+mzdiff	0.01
+ppm	56
+snthresh	10
+noise	0
+prefilter	3
+value_of_prefilter	100
+mzCenterFun	wMean
+integrate	1
+fitgauss	FALSE
