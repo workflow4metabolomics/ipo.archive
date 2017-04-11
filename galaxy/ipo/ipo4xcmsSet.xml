@@ -5,18 +5,6 @@
     <macros>
         <import>macros.xml</import>
 
-        <macro name="centwave_non_optimizable">
-            <section name="section_centwave_non_optiomizable"  title="Non optimizable parameters" expanded="True">
-                <param name="snthresh" type="integer" value="10" label="Signal/Noise threshold" help="[snthresh] Signal to noise ratio cutoff" />
-                <param name="integrate" type="select" label="Peak limits method" help="[integrate]" >
-                    <option value="1">peak limits based on smoothed 2nd derivative (less precise)</option>
-                    <option value="2">peak limits based on real data (more sensitive to noise)</option>
-                </param>
-                <param name="prefilter" type="text" value="3,100" label="Prefilter step for the first phase" help="[prefilter] Separate by coma k,I. Mass traces are only retained if they contain at least ‘k’ peaks with intensity >= ‘I’"/>
-                <param name="noise" type="integer" value="0" label="Noise filter" help="[noise] optional argument which is useful for data that was centroided without any intensity threshold, centroids with intensity smaller than ‘noise’ are omitted from ROI detection"/>
-            </section>
-        </macro>
-
         <macro name="centwave_ppm_fixed">
             <param name="ppm" type="integer" value="25" label="Max tolerated ppm m/z deviation in consecutive scans in ppm" help="[ppm]" />
         </macro>
@@ -27,14 +15,6 @@
             <param name="mzdiff" type="float" value="-0.001" label="Minimum difference in m/z for peaks with overlapping Retention Times" help="[mzdiff] Can be negative to allow overlap" />
         </macro>
 
-        <macro name="matchedfilter_non_optimizable" >
-            <section name="section_matchedfilter_non_optimizable" title="Non optimizable parameters"  expanded="True">
-                <param name="step" type="float" value="0.1" label="Step size to use for profile generation" help="[step] The peak detection algorithm creates extracted ion base peak chromatograms (EIBPC) on a fixed step size" />
-                <param name="steps" type="integer" value="2" label="Number of steps to merge prior to filtration" help="[steps] The peak identification algorithm combines a given number of EIBPCs prior to filtration and peak detection, as defined by the steps argument" />
-                <param name="max" type="integer" value="5" label="Maximum number of peaks per extracted ion chromatogram" help="[max]" />
-                <param name="snthresh" type="integer" value="10" label="Signal to noise ratio cutoff" help="[snthresh]" />
-            </section>
-        </macro>
         <macro name="matchedfilter_fwhm_fixed">
             <param name="fwhm" type="integer" value="30" label="Full width at half maximum of matched filtration gaussian model peak" help="[fwhm] Only used to calculate the actual sigma" />
         </macro>
@@ -64,10 +44,10 @@
         @COMMAND_NSLAVES@
         method $methods.method
         #if $methods.method == "centWave":
-            ppm "c($methods.ppm)"
-            min_peakwidth "c($methods.min_peakwidth)"
-            max_peakwidth "c($methods.max_peakwidth)"
-            mzdiff "c($methods.mzdiff)"
+            ppm "c($methods.section_centwave_optiomizable.ppm)"
+            min_peakwidth "c($methods.section_centwave_optiomizable.min_peakwidth)"
+            max_peakwidth "c($methods.section_centwave_optiomizable.max_peakwidth)"
+            mzdiff "c($methods.section_centwave_optiomizable.mzdiff)"
 
             snthresh "c($methods.section_centwave_non_optiomizable.snthresh)"
             integrate "$methods.section_centwave_non_optiomizable.integrate"
@@ -76,8 +56,8 @@
             prefilter_value "c($methods.section_centwave_non_optiomizable.prefilter_value)"
 
         #elif $methods.method == "matchedFilter":
-            fwhm "c($methods.fwhm)"
-            mzdiff "c($methods.mzdiff)"
+            fwhm "c($methods.section_matchedfilter_optiomizable.fwhm)"
+            mzdiff "c($methods.section_matchedfilter_optiomizable.mzdiff)"
 
             step "c($methods.section_matchedfilter_non_optimizable.step)"
             steps "c($methods.section_matchedfilter_non_optimizable.steps)"
@@ -90,7 +70,7 @@
 
     <inputs>
 
-        <!--<conditional name="inputs">
+        <conditional name="inputs">
             <param name="input" type="select" label="Choose your inputs method" >
                 <option value="zip_file" selected="true">Zip file from your history containing your chromatograms</option>
                 <option value="single_file">mzXML file from your history</option>
@@ -101,7 +81,7 @@
             <when value="single_file">
                 <param name="single_file" type="data" format="mzxml" label="Single file" />
             </when>
-        </conditional>-->
+        </conditional>
 
         <param name="samplebyclass" type="integer" value="2" label="Number of samples used per class to estimate the best parameters" help="Set to 0 to use the whole dataset. To save time, reduce this number" />
 
@@ -147,31 +127,46 @@
                     </conditional>
                 </section>
 
-                <expand macro="centwave_non_optimizable" />
+                <section name="section_centwave_non_optiomizable"  title="Non optimizable parameters" expanded="True">
+                    <param name="snthresh" type="integer" value="10" label="Signal/Noise threshold" help="[snthresh] Signal to noise ratio cutoff" />
+                    <param name="integrate" type="select" label="Peak limits method" help="[integrate]" >
+                        <option value="1">peak limits based on smoothed 2nd derivative (less precise)</option>
+                        <option value="2">peak limits based on real data (more sensitive to noise)</option>
+                    </param>
+                    <param name="prefilter" type="text" value="3,100" label="Prefilter step for the first phase" help="[prefilter] Separate by coma k,I. Mass traces are only retained if they contain at least ‘k’ peaks with intensity >= ‘I’"/>
+                    <param name="noise" type="integer" value="0" label="Noise filter" help="[noise] optional argument which is useful for data that was centroided without any intensity threshold, centroids with intensity smaller than ‘noise’ are omitted from ROI detection"/>
+                </section>
             </when>
 
             <!-- matched Filter options -->
             <when value="matchedFilter">
-                <conditional name="conditional_parameter">
-                    <param name="select_parameter" type="select" label="Which parameter do you want to optimize?" help="Only one paramter can be optimized at once. The other will require fixed values">
-                        <option value="fwhm">Full width at half maximum of matched filtration gaussian model peak [fwhm]</option>
-                        <option value="mzdiff">Minimum difference in m/z for peaks with overlapping Retention Times [mzdiff]</option>
-                    </param>
-                    <when value="fwhm">
-                        <param name="fwhm" type="text" value="25,35" label="Range for Full width at half maximum of matched filtration gaussian model peak" optional="true" help="[fwhm] Only used to calculate the actual sigma (ex: 25,35)">
-                            <validator type="regex" message="Should be this format: XX,YY">[0-9]+,[0-9]+</validator>
+                <section name="section_matchedfilter_optiomizable"  title="Optimizable parameters" expanded="True">
+                    <conditional name="conditional_parameter">
+                        <param name="select_parameter" type="select" label="Which parameter do you want to optimize?" help="Only one paramter can be optimized at once. The other will require fixed values">
+                            <option value="fwhm">Full width at half maximum of matched filtration gaussian model peak [fwhm]</option>
+                            <option value="mzdiff">Minimum difference in m/z for peaks with overlapping Retention Times [mzdiff]</option>
                         </param>
-                        <expand macro="matchedfilter_mzdiff_fixed" />
-                    </when>
-                    <when value="mzdiff">
-                        <param name="mzdiff" type="text" value="0.4,0.7" label="Range for Minimum difference in m/z for peaks with overlapping Retention Times" help="[mzdiff] By default: 0.8-step*steps (ex: 0.4,0.7)">
-                            <validator type="regex" message="Should be one combinaison of those format: XX,YY or -XX,YY or XX.XX,YY.YY">[\-]?[0-9]+[\.]?[0-9]*,[\-]?[0-9]+[\.]?[0-9]*</validator>
-                        </param>
-                        <expand macro="matchedfilter_fwhm_fixed" />
-                    </when>
-                </conditional>
+                        <when value="fwhm">
+                            <param name="fwhm" type="text" value="25,35" label="Range for Full width at half maximum of matched filtration gaussian model peak" optional="true" help="[fwhm] Only used to calculate the actual sigma (ex: 25,35)">
+                                <validator type="regex" message="Should be this format: XX,YY">[0-9]+,[0-9]+</validator>
+                            </param>
+                            <expand macro="matchedfilter_mzdiff_fixed" />
+                        </when>
+                        <when value="mzdiff">
+                            <param name="mzdiff" type="text" value="0.4,0.7" label="Range for Minimum difference in m/z for peaks with overlapping Retention Times" help="[mzdiff] By default: 0.8-step*steps (ex: 0.4,0.7)">
+                                <validator type="regex" message="Should be one combinaison of those format: XX,YY or -XX,YY or XX.XX,YY.YY">[\-]?[0-9]+[\.]?[0-9]*,[\-]?[0-9]+[\.]?[0-9]*</validator>
+                            </param>
+                            <expand macro="matchedfilter_fwhm_fixed" />
+                        </when>
+                    </conditional>
+                </section>
 
-                <expand macro="matchedfilter_non_optimizable" />
+                <section name="section_matchedfilter_non_optimizable" title="Non optimizable parameters"  expanded="True">
+                    <param name="step" type="float" value="0.1" label="Step size to use for profile generation" help="[step] The peak detection algorithm creates extracted ion base peak chromatograms (EIBPC) on a fixed step size" />
+                    <param name="steps" type="integer" value="2" label="Number of steps to merge prior to filtration" help="[steps] The peak identification algorithm combines a given number of EIBPCs prior to filtration and peak detection, as defined by the steps argument" />
+                    <param name="max" type="integer" value="5" label="Maximum number of peaks per extracted ion chromatogram" help="[max]" />
+                    <param name="snthresh" type="integer" value="10" label="Signal to noise ratio cutoff" help="[snthresh]" />
+                </section>
             </when>
         </conditional>
 
@@ -189,10 +184,18 @@
             <param name="inputs|input" value="single_file" />
             <param name="inputs|single_file" value="MM14.mzML"  ftype="mzxml" />
             <param name="samplebyclass" value="0" />
-            <param name="methods|method" value="centWave" />
-            <param name="methods|ppm" value="56" />
-            <param name="methods|min_peakwidth" value="3,9.5" />
-            <param name="methods|max_peakwidth" value="10,20" />
+            <conditional name="methods">
+                <param name="method" value="centWave" />
+                <section name="section_centwave_optiomizable" >
+                    <conditional name="conditional_parameter">
+                        <param name="select_parameter" value="peakwidth" />
+                        <param name="min_peakwidth" value="3,9.5" />
+                        <param name="max_peakwidth" value="10,20" />
+                        <param name="ppm" value="56" />
+                        <param name="mzdiff" value="-0.001" />
+                    </conditional>
+                </section>
+            </conditional>
             <output name="parametersOutput" file="MM14_IPO_parameters4xcmsSet.tsv" />
         </test>
         <!-- Too long for Travis CI -->
