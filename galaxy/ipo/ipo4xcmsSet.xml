@@ -53,7 +53,7 @@
             snthresh $methods.section_centwave_non_optiomizable.snthresh
             integrate $methods.section_centwave_non_optiomizable.integrate
             noise $methods.section_centwave_non_optiomizable.noise
-            prefilter $methods.section_centwave_non_optiomizable.prefilter
+            prefilter "c($methods.section_centwave_non_optiomizable.prefilter)"
 
         #elif $methods.method == "matchedFilter":
             fwhm "c($methods.section_matchedfilter_optiomizable.conditional_parameter.fwhm)"
