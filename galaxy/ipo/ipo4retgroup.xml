@@ -47,12 +47,12 @@
 
         #elif $retcor.methods.method == "peakgroups":
             retcorMethod loess
-            smooth $retcor.methods.section_retcor_obiwarp_non_optimizable.smooth
-            extra $retcor.methods.section_retcor_obiwarp_non_optimizable.extra
-            missing $retcor.methods.section_retcor_obiwarp_non_optimizable.missing
-            span $retcor.methods.section_retcor_obiwarp_non_optimizable.span)
-            family $retcor.methods.section_retcor_obiwarp_non_optimizable.family
-            plottype $retcor.methods.section_retcor_obiwarp_non_optimizable.plottype
+            smooth $retcor.methods.section_retcor_peakgroups_non_optimizable.smooth
+            extra $retcor.methods.section_retcor_peakgroups_non_optimizable.extra
+            missing $retcor.methods.section_retcor_peakgroups_non_optimizable.missing
+            span $retcor.methods.section_retcor_peakgroups_non_optimizable.span
+            family $retcor.methods.section_retcor_peakgroups_non_optimizable.family
+            plottype $retcor.methods.section_retcor_peakgroups_non_optimizable.plottype
         #elif $retcor.methods.method == "none":
             retcorMethod none
         #end if
