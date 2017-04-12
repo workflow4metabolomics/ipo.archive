@@ -4,6 +4,14 @@
 
     <macros>
         <import>macros.xml</import>
+
+        <macro name="group_density_bw_fixed">
+            <param name="bw" type="integer" value="30" label="Bandwidth" help="[bw] bandwidth (standard deviation or half width at half maximum) of gaussian smoothing kernel to apply to the peak density chromatogram" />
+        </macro>
+
+        <macro name="group_density_mzwid_fixed">
+            <param name="mzwid" type="float" value="0.25" label="Width of overlapping m/z slices" help="[mzwid] to use for creating peak density chromatograms and grouping peaks across samples " />
+        </macro>
     </macros>
 
     <expand macro="requirements"/>
@@ -24,43 +32,27 @@
 
         sleep 0.001
         #if $group.methods.method == "density":
-            bw "c($group.methods.bw)"
-            minfrac "c($group.methods.minfrac)"
-            mzwid "c($group.methods.mzwid)"
-            ## minsamp "c($group.methods.minsamp)"
-            #if $group.methods.density_options.option == "show":
-                max "c($group.methods.density_options.max)"
-            #end if
+            bw "c($group.methods.section_group_density_optiomizable.conditional_parameter.bw)"
+            mzwid "c($group.methods.section_group_density_optiomizable.conditional_parameter.mzwid)"
+
+            minfrac $group.methods.section_group_density_non_optimizable.minfrac
+            max $group.methods.section_group_density_non_optimizable.max
         #end if
-
-
 
         ## retcor methods
 
         #if $retcor.methods.method == "obiwarp":
             retcorMethod obiwarp
-            profStep "c($methods.profStep)"
-
-            ## $distFunc [1] "cor_opt"
-            ## $gapInit [1] 0.0 0.4
-            ## $gapExtend [1] 2.1 2.7
-            ## $$plottype [1] "none"
-            ## $response [1] 1
-            ## $factorDiag [1] 2
-            ## $factorGap [1] 1
-            ## $localAlignment [1] 0
+            profStep $methods.section_retcor_obiwarp_non_optimizable.profStep
 
         #elif $retcor.methods.method == "peakgroups":
-            ## smooth loess
             retcorMethod loess
-            smooth loess
-            extra "c($retcor.methods.extra)"
-            missing "c($retcor.methods.missing)"
-            #if $retcor.methods.options.option == "show":
-                span "c($retcor.methods.options.span)"
-                family "$retcor.methods.options.family"
-                plottype "$retcor.methods.options.plottype"
-            #end if
+            smooth $retcor.methods.section_retcor_peakgroups_non_optimizable.smooth
+            extra $retcor.methods.section_retcor_peakgroups_non_optimizable.extra
+            missing $retcor.methods.section_retcor_peakgroups_non_optimizable.missing
+            span $retcor.methods.section_retcor_peakgroups_non_optimizable.span
+            family $retcor.methods.section_retcor_peakgroups_non_optimizable.family
+            plottype $retcor.methods.section_retcor_peakgroups_non_optimizable.plottype
         #elif $retcor.methods.method == "none":
             retcorMethod none
         #end if
@@ -76,92 +68,75 @@
 
         <param name="samplebyclass" type="integer" value="2" label="Number of samples used per class to estimate the best parameters" help="Set to 0 to use the whole dataset. To save time, reduce this number" />
 
-        <section name="group" title="Group Options" expanded="False">
-
+        <section name="group" title="Group Options" expanded="True">
             <conditional name="methods">
-                <param name="method" type="select" label="Method to use for grouping" help="[method] See the help section below">
+                <param name="method" type="select" label="Method to use for grouping" help="[method] See the help section below. Only the density method is available so far">
                     <option value="density" selected="true">density</option>
                 </param>
                 <when value="density">
-                    <param name="bw" type="text" value="22,38" label="Range for Bandwidth" help="[bw] bandwidth (standard deviation or half width at half maximum) of gaussian smoothing kernel to apply to the peak density chromatogram (ex: 30 or 22,38)" />
-                    <param name="minfrac" type="text" value="0.3,0.7" label="Range for Minimum fraction of samples necessary" help="[minfrac] in at least one of the sample groups for it to be a valid group (ex: 0.5 or 0.3,0.7)" />
-                    <param name="mzwid" type="text" value="0.015,0.035" label="Range for Width of overlapping m/z slices" help="[mzwid] to use for creating peak density chromatograms and grouping peaks across samples (ex: 0.25 or 0.015,0.035)" />
-                    <!--
-                    <param name="minsamp" type="hidden" value="1" label="Range for Minimum number of samples necessary in at least one of the sample groups for it to be a valid group" help="[minsamp] (ex: 1 or 0,5" />
-                    -->
-                    <conditional name="density_options">
-                        <param name="option" type="select" label="Advanced options">
-                            <option value="show">show</option>
-                            <option value="hide" selected="true">hide</option>
-                        </param>
-                        <when value="show">
-                            <param name="max" type="text" value="50" label="Range for Maximum number of groups to identify in a single m/z slice" help="[max] (ex: 50 or 25,75)" />
-                        </when>
-                        <when value="hide">
-                        </when>
-                    </conditional>
-
+                    <section name="section_group_density_optiomizable"  title="Optimizable parameters" expanded="True">
+                        <conditional name="conditional_parameter">
+                            <param name="select_parameter" type="select" label="Which parameter do you want to optimize?" help="Only one paramter can be optimized at once. The other will require fixed values">
+                                <option value="bw">Bandwidth [bw]</option>
+                                <option value="mzwid">Width of overlapping m/z slices [mzwid]</option>
+                            </param>
+                            <when value="bw">
+                                <param name="bw" type="text" value="22,38" label="Range for Bandwidth" help="[bw] bandwidth (standard deviation or half width at half maximum) of gaussian smoothing kernel to apply to the peak density chromatogram (ex: 22,38)">
+                                    <validator type="regex" message="Should be this format XX,YY">[0-9]+,[0-9]+</validator>
+                                </param>
+                                <expand macro="group_density_mzwid_fixed" />
+                            </when>
+                            <when value="mzwid">
+                                <param name="mzwid" type="text" value="0.015,0.035" label="Range for Width of overlapping m/z slices" help="[mzwid] to use for creating peak density chromatograms and grouping peaks across samples (ex: 0.015,0.035)" >
+                                    <validator type="regex" message="Should be one combinaison of those format: XX,YY or -XX,YY or XX.XX,YY.YY">[\-]?[0-9]+[\.]?[0-9]*,[\-]?[0-9]+[\.]?[0-9]*</validator>
+                                </param>
+                                <expand macro="group_density_bw_fixed" />
+                            </when>
+                        </conditional>
+                    </section>
+                    <section name="section_group_density_non_optimizable" title="Non optimizable parameters"  expanded="True">
+                        <param name="minfrac" type="float" value="0.5" label="Minimum fraction of samples necessary" help="[minfrac] in at least one of the sample groups for it to be a valid group" />
+                        <param name="max" type="integer" value="50" label="Maximum number of groups to identify in a single m/z slice" help="[max]" />
+                    </section>
                 </when>
             </conditional>
-
-
         </section>
 
-        <section name="retcor" title="Retcor Options" expanded="False">
+        <section name="retcor" title="Retcor Options" expanded="True">
             <conditional name="methods">
                 <param name="method" type="select" label="Method to use for retention time correction" help="[method] See the help section below" >
                     <option value="obiwarp">obiwarp</option>
                     <option value="peakgroups">peakgroups</option>
                 </param>
                 <when value="obiwarp">
-                    <param name="profStep" type="text" value="0.7,1.0" label="Range for Step size (in m/z)" help="[profStep] to use for profile generation from the raw data files (ex: 1 or 0.7 1.0)" />
-                    <!--
-                    ## $distFunc [1] "cor_opt"
-                    ## $gapInit [1] 0.0 0.4
-                    ## $gapExtend [1] 2.1 2.7
-                    ## $$plottype [1] "none"
-                    ## $response [1] 1
-                    ## $factorDiag [1] 2
-                    ## $factorGap [1] 1
-                    ## $localAlignment [1] 0
-                    -->
+                    <section name="section_retcor_obiwarp_non_optimizable" title="Non optimizable parameters"  expanded="True">
+                        <param name="profStep" type="text" value="0.7,1.0" label="Range for Step size (in m/z)" help="[profStep] to use for profile generation from the raw data files (ex: 1 or 0.7 1.0)" />
+                    </section>
                 </when>
                 <when value="peakgroups">
-                    <param name="smooth" type="select" label="Smooth method" help="[smooth] either 'loess’ for non-linear alignment or ‘linear’ for linear alignment" >
-                        <option value="loess">loess</option>
-                    </param>
-                    <param name="extra" type="text" value="1" label="Range for Number of extra peaks to allow in retention time correction correction groups" help="[extra] (ex: 1 or 1,3)" />
-                    <param name="missing" type="text" value="1" label="Range for Number of missing samples to allow in retention time correction groups" help="[missing] (ex: 1or 1,3)" />
-
-                    <conditional name="options">
-                        <param name="option" type="select" label="Advanced options">
-                            <option value="show">show</option>
-                            <option value="hide" selected="true">hide</option>
+                    <section name="section_retcor_peakgroups_non_optimizable" title="Non optimizable parameters"  expanded="True">
+                        <param name="smooth" type="select" label="Smooth method" help="[smooth] only the 'loess’ for non-linear alignment is available so far" >
+                            <option value="loess">loess</option>
                         </param>
-                        <when value="show">
-                            <param name="span" type="text" value="0.1,0.3" label="Range for Degree of smoothing for local polynomial regression fitting" help="[span] (ex: 0.2 or 0.1,0.3)"/>
-                            <!-- @TODO multiple="true" -->
-                            <param name="family" type="select" label="Family" help="[family] if gaussian fitting is by least-squares with no outlier removal, and if symmetric a re descending M estimator is used with Tukey's biweight function, allowing outlier removal">
-                                <option value="gaussian" selected="true">gaussian</option>
-                                <option value="symmetric">symmetric</option>
-                            </param>
-                            <!-- @TODO multiple="true" -->
-                            <param name="plottype" type="select" help="[plottype] if deviation plot retention time deviation points and regression fit, and if mdevden also plot peak overall peak density and retention time correction peak density">
-                                <option value="none" selected="true">none</option>
-                                <option value="deviation">deviation</option>
-                                <option value="mdevden">mdevden</option>
-                            </param>
-
-                        </when>
-                        <when value="hide">
-                        </when>
-                    </conditional>
+                        <param name="extra" type="integer" value="1" label="Number of extra peaks to allow in retention time correction correction groups" help="[extra]" />
+                        <param name="missing" type="integer" value="1" label="Number of missing samples to allow in retention time correction groups" help="[missing]" />
+                        <param name="span" type="float" value="0.2" label="Degree of smoothing for local polynomial regression fitting" help="[span]"/>
+                        <param name="family" type="select" label="Family" help="[family] if gaussian fitting is by least-squares with no outlier removal, and if symmetric a re descending M estimator is used with Tukey's biweight function, allowing outlier removal">
+                            <option value="gaussian" selected="true">gaussian</option>
+                            <option value="symmetric">symmetric</option>
+                        </param>
+                        <param name="plottype" type="select" help="[plottype] if deviation plot retention time deviation points and regression fit, and if mdevden also plot peak overall peak density and retention time correction peak density">
+                            <option value="none" selected="true">none</option>
+                            <option value="deviation">deviation</option>
+                            <option value="mdevden">mdevden</option>
+                        </param>
+                    </section>
                 </when>
             </conditional>
 
         </section>
 
-        <expand macro="file_load"/>
+        <expand macro="input_file_load"/>
 
     </inputs>
 
@@ -182,27 +157,41 @@
             <param name="retcor|methods|smooth" value="loess"/>
             <param name="retcor|methods|extra" value="1"/>
             <param name="retcor|methods|missing" value="1"/>
-            <param name="file_load_conditional|file_load_select" value="yes" />
-            <param name="file_load_conditional|inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <expand macro="test_file_load_zip"/>
             <output name="parametersOutput" file="faahKO_IPO_parameters4retgroup.tsv" />
         </test>-->
 
         <test>
             <param name="image" value="faahKO.xset.RData"/>
-            <param name="group|methods|method" value="density"/>
-            <param name="group|methods|bw" value="28,32"/>
-            <param name="group|methods|minfrac" value="1"/>
-            <param name="group|methods|mzwid" value="0.25"/>
-            <param name="retcor|methods|method" value="peakgroups"/>
-            <param name="retcor|methods|smooth" value="loess"/>
-            <param name="retcor|methods|extra" value="1"/>
-            <param name="retcor|methods|missing" value="1"/>
-            <param name="file_load_conditional|file_load_select" value="yes" />
-            <param name="file_load_conditional|inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <section name="group">
+                <conditional name="methods">
+                    <param name="method" value="density"/>
+                    <section name="section_group_density_optiomizable">
+                        <conditional name="conditional_parameter">
+                            <param name="bw" value="28,32"/>
+                            <param name="mzwid" value="0.25"/>
+                        </conditional>
+                    </section>
+                    <section name="section_group_density_non_optimizable">
+                        <param name="minfrac" value="1"/>
+                    </section>
+                </conditional>
+            </section>
+            <section name="retcor">
+                <conditional name="methods">
+                    <param name="method" value="peakgroups"/>
+                    <section name="section_retcor_peakgroups_non_optimizable">
+                        <param name="smooth" value="loess"/>
+                        <param name="rextra" value="1"/>
+                        <param name="missing" value="1"/>
+                    </section>
+                </conditional>
+            </section>
+            <expand macro="test_file_load_zip"/>
             <output name="parametersOutput" file="faahKO_IPO_parameters4retgroup_bw.tsv" />
         </test>
 
-        <test>
+        <!--<test>
             <param name="image" value="faahKO.xset.RData"/>
             <param name="group|methods|method" value="density"/>
             <param name="group|methods|bw" value="30"/>
@@ -212,10 +201,9 @@
             <param name="retcor|methods|smooth" value="loess"/>
             <param name="retcor|methods|extra" value="1"/>
             <param name="retcor|methods|missing" value="1"/>
-            <param name="file_load_conditional|file_load_select" value="yes" />
-            <param name="file_load_conditional|inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <expand macro="test_file_load_zip"/>
             <output name="parametersOutput" file="faahKO_IPO_parameters4retgroup_mzmid.tsv" />
-        </test>
+        </test>-->
 
         <!--<test>
             <param name="image" value="MM-xset-merge.RData"/>
@@ -228,8 +216,7 @@
             <param name="retcor|methods|extra" value="1"/>
             <param name="retcor|methods|missing" value="1"/>
             <param name="file_load_conditional|file_load_select" value="yes" />
-            <param name="file_load_conditional|inputs|input" value="single_file" />
-            <param name="file_load_conditional|inputs|single_file" value="MM8.mzML,MM14.mzML"  ftype="mzxml" />
+            <expand macro="test_file_load_single"/>
             <output name="parametersOutput" file="MM_IPO_parameters4retgroup.tsv" />
         </test>-->
     </tests>
