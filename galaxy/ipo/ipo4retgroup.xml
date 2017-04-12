@@ -136,7 +136,7 @@
 
         </section>
 
-        <expand macro="file_load"/>
+        <expand macro="input_file_load"/>
 
     </inputs>
 
@@ -157,8 +157,7 @@
             <param name="retcor|methods|smooth" value="loess"/>
             <param name="retcor|methods|extra" value="1"/>
             <param name="retcor|methods|missing" value="1"/>
-            <param name="file_load_conditional|file_load_select" value="yes" />
-            <param name="file_load_conditional|inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <expand macro="test_file_load_zip"/>
             <output name="parametersOutput" file="faahKO_IPO_parameters4retgroup.tsv" />
         </test>-->
 
@@ -188,8 +187,7 @@
                     </section>
                 </conditional>
             </section>
-            <param name="file_load_conditional|file_load_select" value="yes" />
-            <param name="file_load_conditional|inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <expand macro="test_file_load_zip"/>
             <output name="parametersOutput" file="faahKO_IPO_parameters4retgroup_bw.tsv" />
         </test>
 
@@ -203,8 +201,7 @@
             <param name="retcor|methods|smooth" value="loess"/>
             <param name="retcor|methods|extra" value="1"/>
             <param name="retcor|methods|missing" value="1"/>
-            <param name="file_load_conditional|file_load_select" value="yes" />
-            <param name="file_load_conditional|inputs|zip_file" value="faahKO_reduce.zip"  ftype="zip" />
+            <expand macro="test_file_load_zip"/>
             <output name="parametersOutput" file="faahKO_IPO_parameters4retgroup_mzmid.tsv" />
         </test>-->
 
@@ -219,8 +216,7 @@
             <param name="retcor|methods|extra" value="1"/>
             <param name="retcor|methods|missing" value="1"/>
             <param name="file_load_conditional|file_load_select" value="yes" />
-            <param name="file_load_conditional|inputs|input" value="single_file" />
-            <param name="file_load_conditional|inputs|single_file" value="MM8.mzML,MM14.mzML"  ftype="mzxml" />
+            <expand macro="test_file_load_single"/>
             <output name="parametersOutput" file="MM_IPO_parameters4retgroup.tsv" />
         </test>-->
     </tests>

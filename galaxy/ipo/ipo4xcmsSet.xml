@@ -30,10 +30,10 @@
     <command><![CDATA[
         LANG=C Rscript $__tool_directory__/ipo4xcmsSet.r
 
-        #if $inputs.input == "zip_file":
-            zipfile $inputs.zip_file
-        #elif $inputs.input == "single_file":
-            singlefile_galaxyPath $inputs.single_file singlefile_sampleName $inputs.single_file.name
+        #if $input.is_of_type("mzxml") or $input.is_of_type("mzml") or $input.is_of_type("mzdata") or $input.is_of_type("netcdf"):
+            singlefile_galaxyPath '$input' singlefile_sampleName '$input.name'
+        #else
+            zipfile '$input'
         #end if
 
         parametersOutput $parametersOutput
@@ -70,18 +70,7 @@
 
     <inputs>
 
-        <conditional name="inputs">
-            <param name="input" type="select" label="Choose your inputs method" >
-                <option value="zip_file" selected="true">Zip file from your history containing your chromatograms</option>
-                <option value="single_file">mzXML file from your history</option>
-            </param>
-            <when value="zip_file">
-                <param name="zip_file" type="data" format="no_unzip.zip,zip" label="Zip file" />
-            </when>
-            <when value="single_file">
-                <param name="single_file" type="data" format="mzxml" label="Single file" />
-            </when>
-        </conditional>
+        <param name="input" type="data" format="mzxml,mzml,mzdata,netcdf,no_unzip.zip,zip" label="File(s) from your history containing your chromatograms" help="Single file mode for the format: mzxml, mzml, mzdata and netcdf. Zip file mode for the format: no_unzip.zip, zip. See the help section below." />
 
         <param name="samplebyclass" type="integer" value="2" label="Number of samples used per class to estimate the best parameters" help="Set to 0 to use the whole dataset. To save time, reduce this number" />
 
@@ -181,8 +170,7 @@
 
     <tests>
         <test>
-            <param name="inputs|input" value="single_file" />
-            <param name="inputs|single_file" value="MM14.mzML"  ftype="mzxml" />
+            <param name="input" value="MM14.mzML"  ftype="mzxml" />
             <param name="samplebyclass" value="0" />
             <conditional name="methods">
                 <param name="method" value="centWave" />
@@ -199,8 +187,7 @@
             <output name="parametersOutput" file="MM14_IPO_parameters4xcmsSet_peakwidth.tsv" />
         </test>
         <test>
-            <param name="inputs|input" value="single_file" />
-            <param name="inputs|single_file" value="MM14.mzML"  ftype="mzxml" />
+            <param name="input" value="MM14.mzML"  ftype="mzxml" />
             <param name="samplebyclass" value="0" />
             <conditional name="methods">
                 <param name="method" value="centWave" />
