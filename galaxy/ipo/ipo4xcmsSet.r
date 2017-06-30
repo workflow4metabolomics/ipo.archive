@@ -107,7 +107,6 @@ if(exists("zipfile") && (zipfile!="")) {
     # Because IPO only want raw data in its working directory
     dir.create("ipoworkingdir")
     setwd("ipoworkingdir")
-    file.symlink(zipfile, ".")
 
     #unzip
     suppressWarnings(unzip(zipfile, unzip="unzip"))
@@ -120,8 +119,6 @@ if(exists("zipfile") && (zipfile!="")) {
     if (length(directories) == 1) directory = directories
 
     cat("files_root_directory\t",directory,"\n")
-
-    file.remove(zipfile)
 
 
 }
