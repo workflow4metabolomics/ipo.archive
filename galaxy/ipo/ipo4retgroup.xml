@@ -43,7 +43,7 @@
 
         #if $retcor.methods.method == "obiwarp":
             retcorMethod obiwarp
-            profStep $methods.section_retcor_obiwarp_non_optimizable.profStep
+            profStep $retcor.methods.section_retcor_obiwarp_non_optimizable.profStep
 
         #elif $retcor.methods.method == "peakgroups":
             retcorMethod loess
