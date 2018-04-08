@@ -44,8 +44,6 @@ source_local("lib.r")
 
 cat("\n\n")
 
-#Import the different functions
-
 # ----- PROCESSING INFILE -----
 cat("\tARGUMENTS PROCESSING INFO\n")
 
@@ -70,8 +68,8 @@ if (!is.null(listArguments[["zipfile"]])){
 
 
 if (!is.null(listArguments[["singlefile_galaxyPath"]])){
-    singlefile_galaxyPath = unlist(strsplit(listArguments[["singlefile_galaxyPath"]],",")); listArguments[["singlefile_galaxyPath"]]=NULL
-    singlefile_sampleName = unlist(strsplit(listArguments[["singlefile_sampleName"]],",")); listArguments[["singlefile_sampleName"]]=NULL
+  singlefile_galaxyPath = listArguments[["singlefile_galaxyPath"]]; listArguments[["singlefile_galaxyPath"]]=NULL
+  singlefile_sampleName = listArguments[["singlefile_sampleName"]]; listArguments[["singlefile_sampleName"]]=NULL
 }
 
 # single file case
