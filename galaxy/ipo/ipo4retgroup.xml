@@ -112,7 +112,7 @@
 
         <section name="retcor" title="Retcor Options" expanded="True">
             <conditional name="methods">
-                <param name="method" type="select" label="Method to use for retention time correction" help="[method] See the help section below" >
+                <param name="retcormethod" type="select" label="Method to use for retention time correction" help="[method] See the help section below" >
                     <option value="obiwarp" selected="true">obiwarp</option>
                     <option value="peakgroups">peakgroups</option>
                 </param>
@@ -187,7 +187,7 @@
             </section>
             <section name="retcor">
                 <conditional name="methods">
-                    <param name="method" value="peakgroups"/>
+                    <param name="retcormethod" value="peakgroups"/>
                     <section name="section_retcor_peakgroups_non_optimizable">
                         <param name="smooth" value="loess"/>
                         <param name="rextra" value="1"/>
