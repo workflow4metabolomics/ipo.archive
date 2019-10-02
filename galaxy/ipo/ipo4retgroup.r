@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 #Authors Gildas Le Corguille and Yann Guitton
 
+# Setup R error handling to go to stderr for better error messages in Galaxy
+options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
 
 # ----- LOG FILE -----
 log_file=file("log.txt", open = "wt")
@@ -42,8 +44,6 @@ source_local("lib.r")
 
 cat("\n\n")
 
-#Import the different functions
-
 # ----- PROCESSING INFILE -----
 cat("\tARGUMENTS PROCESSING INFO\n")
 
@@ -68,8 +68,8 @@ if (!is.null(listArguments[["zipfile"]])){
 
 
 if (!is.null(listArguments[["singlefile_galaxyPath"]])){
-    singlefile_galaxyPath = unlist(strsplit(listArguments[["singlefile_galaxyPath"]],",")); listArguments[["singlefile_galaxyPath"]]=NULL
-    singlefile_sampleName = unlist(strsplit(listArguments[["singlefile_sampleName"]],",")); listArguments[["singlefile_sampleName"]]=NULL
+  singlefile_galaxyPath = listArguments[["singlefile_galaxyPath"]]; listArguments[["singlefile_galaxyPath"]]=NULL
+  singlefile_sampleName = listArguments[["singlefile_sampleName"]]; listArguments[["singlefile_sampleName"]]=NULL
 }
 
 # single file case

@@ -21,6 +21,12 @@
         LANG=C Rscript $__tool_directory__/ipo4retgroup.r
 
         image '$image'
+        
+        #if $input.is_of_type("mzxml") or $input.is_of_type("mzml") or $input.is_of_type("mzdata") or $input.is_of_type("netcdf"):
+            singlefile_galaxyPath '$input' singlefile_sampleName '$input.name'
+        #else
+            zipfile '$input'
+        #end if
 
         parametersOutput '$parametersOutput'
 
@@ -41,11 +47,11 @@
 
         ## retcor methods
 
-        #if $retcor.methods.method == "obiwarp":
+        #if $retcor.methods.retcormethod == "obiwarp":
             retcorMethod obiwarp
             profStep $retcor.methods.section_retcor_obiwarp_non_optimizable.profStep
 
-        #elif $retcor.methods.method == "peakgroups":
+        #elif $retcor.methods.retcormethod == "peakgroups":
             retcorMethod loess
             smooth $retcor.methods.section_retcor_peakgroups_non_optimizable.smooth
             extra $retcor.methods.section_retcor_peakgroups_non_optimizable.extra
@@ -53,7 +59,7 @@
             span $retcor.methods.section_retcor_peakgroups_non_optimizable.span
             family $retcor.methods.section_retcor_peakgroups_non_optimizable.family
             plottype $retcor.methods.section_retcor_peakgroups_non_optimizable.plottype
-        #elif $retcor.methods.method == "none":
+        #elif $retcor.methods.retcormethod == "none":
             retcorMethod none
         #end if
 
@@ -63,6 +69,8 @@
     ]]></command>
 
     <inputs>
+    
+        <param name="input" type="data" format="mzxml,mzml,mzdata,netcdf,no_unzip.zip,zip" label="File(s) from your history containing your chromatograms" help="Single file mode for the format: mzxml, mzml, mzdata and netcdf. Zip file mode for the format: no_unzip.zip, zip. See the help section below." />
 
         <param name="image" type="data" format="rdata.xcms.raw,rdata.xcms.group,rdata.xcms.retcor,rdata" label="xset RData file" help="output file from another function xcms (xcmsSet, retcor etc.)" />
 
@@ -104,8 +112,8 @@
 
         <section name="retcor" title="Retcor Options" expanded="True">
             <conditional name="methods">
-                <param name="method" type="select" label="Method to use for retention time correction" help="[method] See the help section below" >
-                    <option value="obiwarp">obiwarp</option>
+                <param name="retcormethod" type="select" label="Method to use for retention time correction" help="[method] See the help section below" >
+                    <option value="obiwarp" selected="true">obiwarp</option>
                     <option value="peakgroups">peakgroups</option>
                 </param>
                 <when value="obiwarp">
@@ -179,7 +187,7 @@
             </section>
             <section name="retcor">
                 <conditional name="methods">
-                    <param name="method" value="peakgroups"/>
+                    <param name="retcormethod" value="peakgroups"/>
                     <section name="section_retcor_peakgroups_non_optimizable">
                         <param name="smooth" value="loess"/>
                         <param name="rextra" value="1"/>

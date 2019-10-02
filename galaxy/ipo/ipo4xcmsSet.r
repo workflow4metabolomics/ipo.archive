@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 #Authors Gildas Le Corguille and Yann Guitton
 
+# Setup R error handling to go to stderr for better error messages in Galaxy
+options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
 
 # ----- LOG FILE -----
 log_file=file("log.txt", open = "wt")
@@ -18,7 +20,7 @@ for(pkg in pkgs) {
   cat(pkg,"\t",as.character(packageVersion(pkg)),"\n",sep="")
 }
 source_local <- function(fname){ argv <- commandArgs(trailingOnly = FALSE); base_dir <- dirname(substring(argv[grep("--file=", argv)], 8)); source(paste(base_dir, fname, sep="/")) }
-cat("\n\n"); 
+cat("\n\n");
 
 
 
@@ -82,15 +84,15 @@ if(exists("singlefile_galaxyPath") && (singlefile_galaxyPath!="")) {
         error_message=paste("Cannot access the sample:",singlefile_sampleName,"located:",singlefile_galaxyPath,". Please, contact your administrator ... if you have one!")
         print(error_message); stop(error_message)
     }
-    
+
     cwd=getwd()
     dir.create("raw")
     setwd("raw")
     file.symlink(singlefile_galaxyPath,singlefile_sampleName)
     setwd(cwd)
-    
+
     directory = "raw"
-    
+
 }
 
 # We unzip automatically the chromatograms from the zip files.
@@ -109,7 +111,7 @@ if(exists("zipfile") && (zipfile!="")) {
     setwd("ipoworkingdir")
 
     #unzip
-    suppressWarnings(unzip(zipfile, unzip="unzip"))
+    suppressWarnings(unzip(zipfile, unzip=getOption("unzip")))
 
     #get the directory name
     filesInZip=unzip(zipfile, list=T);
@@ -160,4 +162,3 @@ cat("\n\n")
 
 
 cat("\tDONE\n")
-
