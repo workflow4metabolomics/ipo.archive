@@ -12,13 +12,13 @@ IPO
 ----
 A Tool for automated Optimization of XCMS Parameters
 
-Maintainer: Gunnar Libiseller
+Maintainer: Thomas Riebenbauer
 
 Citation:
 
 Gunnar Libiseller, Michaela Dvorzak, Ulrike Kleb, Edgar Gander, Tobias Eisenberg, Frank Madeo, Steffen Neumann, Gert Trausinger, Frank Sinner, Thomas Pieber and Christoph Magnes. IPO: a tool for automated optimization of XCMS parameters. BMC Bioinformatics 16 (2015): 118. doi:10.1186/s12859-015-0562-8.
 
-Homepage: [https://github.com/glibiseller/IPO](https://github.com/glibiseller/IPO)
+Homepage: [https://github.com/rietho/IPO](https://github.com/rietho/IPO)
 
 
 Galaxy
